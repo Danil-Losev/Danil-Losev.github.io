@@ -1,0 +1,87 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PostCard from "../components/PostCard.astro";
+
+const posts = (
+  await getCollection(
+    "blog",
+    ({ data }) => !data.draft
+  )
+).sort(
+  (a, b) =>
+    b.data.pubDate.valueOf() -
+    a.data.pubDate.valueOf()
+);
+
+const latestPosts = posts.slice(0, 5);
+---
+
+<BaseLayout
+  title="LOSEV.LAB — Technical Blog"
+  description="Technical blog about Linux, embedded systems, C/C++, toolchains and systems programming."
+>
+
+  <section class="hero">
+    <div class="container hero-grid">
+
+      <div>
+        <div class="eyebrow">
+          SYSTEMS / LINUX / EMBEDDED
+        </div>
+
+        <h1>
+          LOSEV.LAB
+        </h1>
+
+        <p class="hero-description">
+          Технический блог о системах,
+          Linux, embedded-разработке,
+          C/C++ и всём, что происходит
+          между железом и программой.
+        </p>
+      </div>
+
+      <div class="hero-meta">
+        <span>STATUS: ONLINE</span>
+        <span>LOCATION: /home/danil</span>
+        <span>MODE: BUILDING</span>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+      <div class="section-header">
+        <h2 class="section-title">
+          Latest posts
+        </h2>
+
+        <a
+          href="/blog/"
+          class="section-link"
+        >
+          View all →
+        </a>
+      </div>
+
+      <div class="posts">
+        {
+          latestPosts.map((post) => (
+            <PostCard
+              title={post.data.title}
+              description={post.data.description}
+              category={post.data.category}
+              date={post.data.pubDate}
+              slug={post.id}
+            />
+          ))
+        }
+      </div>
+
+    </div>
+  </section>
+
+</BaseLayout>

@@ -1,0 +1,79 @@
+---
+import { getCollection } from 'astro:content';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+
+const projects = (
+  await getCollection(
+    'projects',
+    ({ data }) => !data.draft
+  )
+).sort((a, b) => {
+  if (a.data.featured && !b.data.featured) {
+    return -1;
+  }
+
+  if (!a.data.featured && b.data.featured) {
+    return 1;
+  }
+
+  return a.data.title.localeCompare(
+    b.data.title
+  );
+});
+---
+
+<BaseLayout
+  title="Projects — LOSEV.LAB"
+  description="Projects, experiments and software developed by Danil Losev."
+>
+  <main class="section projects-page">
+    <div class="container">
+
+      <header class="projects-header">
+        <div>
+          <div class="eyebrow">
+            PROJECTS / EXPERIMENTS
+          </div>
+
+          <h1 class="projects-title">
+            Things I build.
+          </h1>
+        </div>
+
+        <div class="projects-count">
+          {projects.length
+            .toString()
+            .padStart(2, '0')} PROJECTS
+        </div>
+      </header>
+
+
+      {projects.length > 0 ? (
+        <div class="projects-list">
+          {projects.map((project) => (
+            <ProjectCard
+              title={project.data.title}
+              description={project.data.description}
+              status={project.data.status}
+              category={project.data.category}
+              slug={project.id}
+              icon={project.data.icon}
+              tags={project.data.tags}
+              github={project.data.github}
+              demo={project.data.demo}
+              website={project.data.website}
+            />
+          ))}
+        </div>
+      ) : (
+        <div class="projects-empty">
+          <span>No projects yet.</span>
+        </div>
+      )}
+
+    </div>
+  </main>
+</BaseLayout>

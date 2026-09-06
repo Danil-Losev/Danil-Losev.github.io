@@ -1,0 +1,143 @@
+---
+import ProjectIcon from './ProjectIcon.astro';
+
+interface Props {
+  title: string;
+
+  description: string;
+
+  status: 'active' | 'completed' | 'archived';
+
+  category: string;
+
+  slug: string;
+
+  icon: {
+    type: 'image' | 'icon';
+
+    src?: string;
+
+    alt?: string;
+
+    name?: string;
+  };
+
+  tags: string[];
+
+  github?: string;
+
+  demo?: string;
+
+  website?: string;
+}
+
+const {
+  title,
+  description,
+  status,
+  category,
+  slug,
+  icon,
+  tags,
+  github,
+  demo,
+  website,
+} = Astro.props;
+
+
+const statusLabel = {
+  active: 'ACTIVE',
+  completed: 'COMPLETED',
+  archived: 'ARCHIVED',
+}[status];
+---
+
+<article class="project-card">
+  <a
+    href={`/projects/${slug}/`}
+    class="project-card-main"
+    aria-label={`Open project: ${title}`}
+  >
+    <div class="project-card-icon">
+      <ProjectIcon
+        type={icon.type}
+        src={icon.src}
+        alt={icon.alt}
+        name={icon.name}
+        size={42}
+      />
+    </div>
+
+    <div class="project-card-content">
+      <div class="project-card-top">
+        <span class="project-category">
+          {category}
+        </span>
+
+        <span class={`project-status project-status-${status}`}>
+          <span class="project-status-dot"></span>
+          {statusLabel}
+        </span>
+      </div>
+
+      <h2 class="project-title">
+        {title}
+      </h2>
+
+      <p class="project-description">
+        {description}
+      </p>
+
+      {tags.length > 0 && (
+        <div class="project-tags">
+          {tags.map((tag) => (
+            <span class="project-tag">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <div class="project-arrow">
+      →
+    </div>
+  </a>
+
+  {(github || demo || website) && (
+    <div class="project-links">
+      {github && (
+        <a
+          href={github}
+          target="_blank"
+          rel="noreferrer"
+          class="project-link"
+        >
+          GitHub ↗
+        </a>
+      )}
+
+      {demo && (
+        <a
+          href={demo}
+          target="_blank"
+          rel="noreferrer"
+          class="project-link"
+        >
+          Demo ↗
+        </a>
+      )}
+
+      {website && (
+        <a
+          href={website}
+          target="_blank"
+          rel="noreferrer"
+          class="project-link"
+        >
+          Website ↗
+        </a>
+      )}
+    </div>
+  )}
+</article>

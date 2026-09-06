@@ -1,0 +1,52 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  category: string;
+  date: Date;
+  slug: string;
+}
+
+const {
+  title,
+  description,
+  category,
+  date,
+  slug,
+} = Astro.props;
+---
+
+<a
+  href={`/blog/${slug}/`}
+  class="post-card"
+>
+  <time class="post-date">
+    {date.toLocaleDateString("ru-RU", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    })}
+  </time>
+
+  <div>
+    <div class="post-category">
+      {category}
+    </div>
+
+    <h2 class="post-title">
+      {title}
+    </h2>
+
+    {
+      description && (
+        <p class="post-description">
+          {description}
+        </p>
+      )
+    }
+  </div>
+
+  <span class="post-arrow">
+    →
+  </span>
+</a>

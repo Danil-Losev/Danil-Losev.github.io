@@ -1,0 +1,47 @@
+---
+interface Props {
+  type?: 'note' | 'tip' | 'warning' | 'danger';
+
+  title?: string;
+}
+
+const {
+  type = 'note',
+  title,
+} = Astro.props;
+
+
+const defaultTitles = {
+  note: 'NOTE',
+  tip: 'TIP',
+  warning: 'WARNING',
+  danger: 'DANGER',
+};
+
+
+const heading = title ?? defaultTitles[type];
+---
+
+<aside class={`callout callout-${type}`}>
+
+  <div class="callout-header">
+
+    <span class="callout-icon" aria-hidden="true">
+      {type === 'note' && 'i'}
+      {type === 'tip' && '✓'}
+      {type === 'warning' && '!'}
+      {type === 'danger' && '×'}
+    </span>
+
+    <span class="callout-title">
+      {heading}
+    </span>
+
+  </div>
+
+
+  <div class="callout-content">
+    <slot />
+  </div>
+
+</aside>

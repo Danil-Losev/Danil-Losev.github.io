@@ -1,0 +1,138 @@
+---
+interface Props {
+    Content: any;
+}
+
+const { Content } = Astro.props;
+---
+
+<div class="markdown-content">
+    <Content />
+</div>
+
+<script>
+    function setupCodeBlocks() {
+        const containers = document.querySelectorAll(".markdown-content");
+
+        containers.forEach((container) => {
+            const blocks = container.querySelectorAll("pre");
+
+            blocks.forEach((pre) => {
+                if (pre.dataset.enhanced === "true") {
+                    return;
+                }
+
+                const code = pre.querySelector("code");
+
+                if (!code) {
+                    return;
+                }
+
+                pre.dataset.enhanced = "true";
+
+                /*
+                 * Astro/Shiki может хранить язык в разных местах
+                 * в зависимости от версии/конфигурации.
+                 */
+                const classes = [...pre.classList, ...code.classList];
+
+                let language = classes
+                    .find((className) => className.startsWith("language-"))
+                    ?.replace("language-", "");
+
+                /*
+                 * Если язык не нашли через language-*,
+                 * пробуем data-language.
+                 */
+                if (!language) {
+                    language = pre.dataset.language || code.dataset.language;
+                }
+
+                language = language || "text";
+
+                // Создаём контейнер
+                const wrapper = document.createElement("div");
+                wrapper.className = "code-block";
+
+                pre.parentNode?.insertBefore(wrapper, pre);
+                wrapper.appendChild(pre);
+
+                // Верхняя панель
+                const header = document.createElement("div");
+                header.className = "code-block-header";
+
+                // Язык
+                const languageLabel = document.createElement("span");
+                languageLabel.className = "code-block-language";
+
+                languageLabel.textContent = language;
+
+                // Copy
+                const copyButton = document.createElement("button");
+                copyButton.type = "button";
+                copyButton.className = "code-copy-button";
+                copyButton.textContent = "Copy";
+
+                copyButton.addEventListener("click", async () => {
+                    const text = code.textContent ?? "";
+
+                    try {
+                        await navigator.clipboard.writeText(text);
+
+                        copyButton.textContent = "Copied!";
+
+                        setTimeout(() => {
+                            copyButton.textContent = "Copy";
+                        }, 1500);
+                    } catch {
+                        copyButton.textContent = "Failed";
+
+                        setTimeout(() => {
+                            copyButton.textContent = "Copy";
+                        }, 1500);
+                    }
+                });
+
+                header.appendChild(languageLabel);
+                header.appendChild(copyButton);
+
+                wrapper.insertBefore(header, pre);
+            });
+
+            const tables = container.querySelectorAll("table");
+
+            tables.forEach((table) => {
+                if (table.parentElement?.classList.contains("table-wrapper")) {
+                    return;
+                }
+
+                const wrapper = document.createElement("div");
+                wrapper.className = "table-wrapper";
+
+                table.parentNode?.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
+            });
+
+            const images = container.querySelectorAll("img");
+
+            images.forEach((img) => {
+                if (img.dataset.enhanced === "true") {
+                    return;
+                }
+
+                img.dataset.enhanced = "true";
+
+                img.loading = "lazy";
+                img.decoding = "async";
+
+                img.addEventListener("click", () => {
+                    window.open(img.currentSrc || img.src, "_blank");
+                });
+            });
+        });
+    }
+
+    setupCodeBlocks();
+
+    document.addEventListener("astro:page-load", setupCodeBlocks);
+</script>
