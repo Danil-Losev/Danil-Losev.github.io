@@ -2,127 +2,198 @@
 import "../styles/global.css";
 
 interface Props {
-  title?: string;
-  description?: string;
+    title?: string;
+    description?: string;
 }
 
-const {
-  title = "LOSEV.LAB",
-  description = "Technical blog by Danil Losev",
-} = Astro.props;
+const { title = "LOSEV.LAB", description = "Technical blog by Danil Losev" } =
+    Astro.props;
 
 const currentUrl = Astro.url.href;
 ---
 
 <!doctype html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
+    <head>
+        <meta charset="UTF-8" />
 
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1"
-    />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <meta
-      name="description"
-      content={description}
-    />
+        <meta name="description" content={description} />
 
-    <link
-      rel="canonical"
-      href={currentUrl}
-    />
+        <link rel="canonical" href={currentUrl} />
 
-    <title>{title}</title>
+        <title>{title}</title>
 
-    <script is:inline>
-      const savedTheme = localStorage.getItem("theme");
+        <script is:inline>
+            const savedTheme = localStorage.getItem("theme");
 
-      if (savedTheme) {
-        document.documentElement.dataset.theme = savedTheme;
-      } else if (
-        window.matchMedia(
-          "(prefers-color-scheme: light)"
-        ).matches
-      ) {
-        document.documentElement.dataset.theme = "light";
-      }
-    </script>
-  </head>
+            if (savedTheme) {
+                document.documentElement.dataset.theme = savedTheme;
+            } else if (
+                window.matchMedia("(prefers-color-scheme: light)").matches
+            ) {
+                document.documentElement.dataset.theme = "light";
+            }
+        </script>
+    </head>
 
-  <body>
-    <header class="site-header">
-      <div class="container header-inner">
+    <body>
+        <header class="site-header">
+            <div class="container header-inner">
+                <a href="/" class="logo">
+                    <span class="logo-mark">L</span>
+                    <span class="logo-text">LOSEV.LAB</span>
+                </a>
 
-        <a href="/" class="logo">
-          <span class="logo-mark">L</span>
-          <span class="logo-text">LOSEV.LAB</span>
-        </a>
+                <nav class="nav">
+                    <a href="/">HOME</a>
+                    <a href="/blog/">BLOG</a>
+                    <a href="/projects/">PROJECTS</a>
+                    <a href="/about/">ABOUT</a>
+                    <a
+                        href="https://github.com/Danil-Losev"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        GITHUB
+                    </a>
+                </nav>
 
-        <nav class="nav">
-          <a href="/">BLOG</a>
-          <a href="/projects/">PROJECTS</a>
-          <a href="/about/">ABOUT</a>
-          <a
-            href="https://github.com/Danil-Losev"
-            target="_blank"
-            rel="noreferrer"
-          >
-            GITHUB
-          </a>
+                <div class="header-actions">
+                    <button
+                        class="icon-button"
+                        id="theme-toggle"
+                        aria-label="Toggle theme"
+                    >
+                        ◐
+                    </button>
+
+                    <button
+                        class="icon-button nav-toggle"
+                        id="nav-toggle"
+                        aria-label="Toggle menu"
+                        aria-expanded="false"
+                        aria-controls="nav-drawer"
+                    >
+                        <span class="nav-toggle-bars">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="nav-drawer-backdrop" id="nav-drawer-backdrop"></div>
+
+        <nav class="nav-drawer" id="nav-drawer" aria-hidden="true">
+            <div class="nav-drawer-header">
+                <span class="nav-drawer-title">Menu</span>
+
+                <button
+                    class="icon-button"
+                    id="nav-drawer-close"
+                    aria-label="Close menu"
+                >
+                    ×
+                </button>
+            </div>
+            <a href="/">HOME</a>
+            <a href="/blog/">BLOG</a>
+            <a href="/projects/">PROJECTS</a>
+            <a href="/about/">ABOUT</a>
+            <a
+                href="https://github.com/Danil-Losev"
+                target="_blank"
+                rel="noreferrer"
+            >
+                GITHUB
+            </a>
         </nav>
 
-        <div class="header-actions">
-          <button
-            class="icon-button"
-            id="theme-toggle"
-            aria-label="Toggle theme"
-          >
-            ◐
-          </button>
-        </div>
+        <main>
+            <slot />
+        </main>
 
-      </div>
-    </header>
+        <footer class="site-footer">
+            <div class="container footer-inner">
+                <span>
+                    © {new Date().getFullYear()} LOSEV.LAB
+                </span>
 
-    <main>
-      <slot />
-    </main>
+                <span> Built with Astro </span>
+            </div>
+        </footer>
 
-    <footer class="site-footer">
-      <div class="container footer-inner">
-        <span>
-          © {new Date().getFullYear()} LOSEV.LAB
-        </span>
+        <script>
+            const button = document.querySelector("#theme-toggle");
 
-        <span>
-          Built with Astro
-        </span>
-      </div>
-    </footer>
+            button?.addEventListener("click", () => {
+                const current = document.documentElement.dataset.theme;
 
-    <script>
-      const button =
-        document.querySelector("#theme-toggle");
+                const next = current === "light" ? "dark" : "light";
 
-      button?.addEventListener("click", () => {
-        const current =
-          document.documentElement.dataset.theme;
+                document.documentElement.dataset.theme = next;
 
-        const next =
-          current === "light"
-            ? "dark"
-            : "light";
+                localStorage.setItem("theme", next);
+            });
+        </script>
 
-        document.documentElement.dataset.theme =
-          next;
+        <script>
+            const navToggle = document.querySelector("#nav-toggle");
 
-        localStorage.setItem(
-          "theme",
-          next
-        );
-      });
-    </script>
-  </body>
+            const navClose = document.querySelector("#nav-drawer-close");
+
+            const navBackdrop = document.querySelector("#nav-drawer-backdrop");
+
+            const navDrawer = document.querySelector("#nav-drawer");
+
+            function openNav() {
+                document.documentElement.dataset.navOpen = "true";
+
+                navToggle?.setAttribute("aria-expanded", "true");
+
+                navDrawer?.setAttribute("aria-hidden", "false");
+
+                document.body.style.overflow = "hidden";
+            }
+
+            function closeNav() {
+                document.documentElement.dataset.navOpen = "false";
+
+                navToggle?.setAttribute("aria-expanded", "false");
+
+                navDrawer?.setAttribute("aria-hidden", "true");
+
+                document.body.style.overflow = "";
+            }
+
+            navToggle?.addEventListener("click", () => {
+                const isOpen =
+                    document.documentElement.dataset.navOpen === "true";
+
+                isOpen ? closeNav() : openNav();
+            });
+
+            navClose?.addEventListener("click", closeNav);
+            navBackdrop?.addEventListener("click", closeNav);
+
+            navDrawer
+                ?.querySelectorAll("a")
+                .forEach((link) => link.addEventListener("click", closeNav));
+
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") closeNav();
+            });
+
+            window
+                .matchMedia("(min-width: 801px)")
+                .addEventListener("change", (e) => {
+                    if (e.matches) closeNav();
+                });
+        </script>
+    </body>
 </html>

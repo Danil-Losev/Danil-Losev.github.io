@@ -5,6 +5,7 @@ interface Props {
   category: string;
   date: Date;
   slug: string;
+  tags?: string[];
 }
 
 const {
@@ -13,12 +14,18 @@ const {
   category,
   date,
   slug,
+  tags = [],
 } = Astro.props;
+
+const searchTitle = title.toLowerCase();
+const searchTags = tags.map((tag) => tag.toLowerCase()).join("|");
 ---
 
 <a
   href={`/blog/${slug}/`}
   class="post-card"
+  data-title={searchTitle}
+  data-tags={searchTags}
 >
   <time class="post-date">
     {date.toLocaleDateString("ru-RU", {
@@ -42,6 +49,16 @@ const {
         <p class="post-description">
           {description}
         </p>
+      )
+    }
+
+    {
+      tags.length > 0 && (
+        <div class="project-tags">
+          {tags.map((tag) => (
+            <span class="project-tag">{tag}</span>
+          ))}
+        </div>
       )
     }
   </div>

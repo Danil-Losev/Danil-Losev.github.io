@@ -1,94 +1,66 @@
 ---
-import {
-  getCollection,
-  render,
-} from "astro:content";
+import { getCollection, render } from "astro:content";
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import MarkdownContent from "../../components/MarkdownContent.astro";
 
 export async function getStaticPaths() {
-  const posts = await getCollection(
-    "blog",
-    ({ data }) => !data.draft
-  );
+    const posts = await getCollection("blog", ({ data }) => !data.draft);
 
-  return posts.map((post) => ({
-    params: {
-      slug: post.id,
-    },
+    return posts.map((post) => ({
+        params: {
+            slug: post.id,
+        },
 
-    props: {
-      post,
-    },
-  }));
+        props: {
+            post,
+        },
+    }));
 }
 
 const { post } = Astro.props;
 
 const { Content } = await render(post);
 
-const {
-  title,
-  description,
-  category,
-  pubDate,
-} = post.data;
+const { title, description, category, pubDate } = post.data;
 ---
 
-<BaseLayout
-  title={`${title} — LOSEV.LAB`}
-  description={
-    description ??
-    title
-  }
->
+<BaseLayout title={`${title} — LOSEV.LAB`} description={description ?? title}>
+    <article class="article">
+        <header class="article-header">
+            <div class="article-category">
+                {category}
+            </div>
 
-  <article class="article">
+            <h1 class="article-title">
+                {title}
+            </h1>
 
-    <header class="article-header">
+            {description && <p class="article-description">{description}</p>}
 
-      <div class="article-category">
-        {category}
-      </div>
+            <div class="article-meta">
+                <time>
+                    {
+                        pubDate.toLocaleDateString("ru-RU", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                        })
+                    }
+                </time>
 
-      <h1 class="article-title">
-        {title}
-      </h1>
+                <span>·</span>
 
-      {
-        description && (
-          <p class="article-description">
-            {description}
-          </p>
-        )
-      }
+                <span> LOSEV.LAB </span>
+            </div>
+        </header>
 
-      <div class="article-meta">
-        <time>
-          {pubDate.toLocaleDateString(
-            "ru-RU",
-            {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            }
-          )}
-        </time>
+        <div class="prose">
+            <MarkdownContent Content={Content} />
+        </div>
 
-        <span>·</span>
-
-        <span>
-          LOSEV.LAB
-        </span>
-      </div>
-
-    </header>
-
-    <div class="prose">
-      <MarkdownContent Content={Content}/>
-    </div>
-
-  </article>
-
+        <div class="project-back">
+            <a href="/blog/"> ← Все статьи </a>
+        </div>
+    </article>
 </BaseLayout>

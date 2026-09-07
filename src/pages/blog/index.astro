@@ -13,6 +13,12 @@ const posts = (
     b.data.pubDate.valueOf() -
     a.data.pubDate.valueOf()
 );
+
+const allTags = [
+  ...new Set(
+    posts.flatMap((post) => post.data.tags)
+  ),
+].sort((a, b) => a.localeCompare(b));
 ---
 
 <BaseLayout
@@ -28,12 +34,56 @@ const posts = (
           All posts
         </h1>
 
-        <span class="section-link">
+        <span
+          class="section-link"
+          id="blog-results-count"
+        >
           {posts.length} articles
         </span>
       </div>
 
-      <div class="posts">
+      {
+        allTags.length > 0 && (
+          <div class="blog-toolbar">
+            <div class="blog-search">
+              <input
+                type="text"
+                class="blog-search-input"
+                id="blog-search-input"
+                placeholder="search by title..."
+                autocomplete="off"
+              />
+            </div>
+
+            <div
+              class="blog-tags"
+              id="blog-tags"
+            >
+              <button
+                type="button"
+                class="blog-tag"
+                data-tag="__all__"
+                aria-pressed="true"
+              >
+                all
+              </button>
+
+              {allTags.map((tag) => (
+                <button
+                  type="button"
+                  class="blog-tag"
+                  data-tag={tag.toLowerCase()}
+                  aria-pressed="false"
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+      }
+
+      <div class="posts" id="blog-posts">
         {
           posts.map((post) => (
             <PostCard
@@ -42,12 +92,101 @@ const posts = (
               category={post.data.category}
               date={post.data.pubDate}
               slug={post.id}
+              tags={post.data.tags}
             />
           ))
         }
+      </div>
+
+      <div
+        class="blog-empty"
+        id="blog-empty"
+      >
+        <span>Ничего не найдено.</span>
       </div>
 
     </div>
   </section>
 
 </BaseLayout>
+
+<script>
+  const searchInput = document.querySelector(
+    "#blog-search-input"
+  );
+
+  const tagButtons = document.querySelectorAll(
+    "#blog-tags .blog-tag"
+  );
+
+  const postCards = document.querySelectorAll(
+    "#blog-posts .post-card"
+  );
+
+  const resultsCount = document.querySelector(
+    "#blog-results-count"
+  );
+
+  const emptyState = document.querySelector(
+    "#blog-empty"
+  );
+
+  const totalPosts = postCards.length;
+
+  let activeTag = "__all__";
+
+  function applyFilters() {
+    const query = (searchInput?.value ?? "")
+      .trim()
+      .toLowerCase();
+
+    let visibleCount = 0;
+
+    postCards.forEach((card) => {
+      const title = card.dataset.title ?? "";
+      const tags = card.dataset.tags ?? "";
+
+      const matchesQuery =
+        query === "" || title.includes(query);
+
+      const matchesTag =
+        activeTag === "__all__" ||
+        tags.split("|").includes(activeTag);
+
+      const isVisible = matchesQuery && matchesTag;
+
+      card.hidden = !isVisible;
+
+      if (isVisible) visibleCount += 1;
+    });
+
+    if (resultsCount) {
+      resultsCount.textContent =
+        visibleCount === totalPosts
+          ? `${totalPosts} articles`
+          : `${visibleCount} / ${totalPosts} articles`;
+    }
+
+    emptyState?.classList.toggle(
+      "is-visible",
+      visibleCount === 0
+    );
+  }
+
+  searchInput?.addEventListener("input", applyFilters);
+
+  tagButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      activeTag = button.dataset.tag ?? "__all__";
+
+      tagButtons.forEach((btn) =>
+        btn.setAttribute(
+          "aria-pressed",
+          String(btn === button)
+        )
+      );
+
+      applyFilters();
+    });
+  });
+</script>
