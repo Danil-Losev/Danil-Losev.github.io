@@ -1,49 +1,146 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+const topics = [
+    {
+        id: "01",
+        title: "C / C++",
+        description:
+            "Языки, которыми удобно разбирать устройство вещей по частям.",
+        tag: "C_CPP",
+    },
+    {
+        id: "02",
+        title: "Rust",
+        description: "Язык, который позволяет писать безопасный и быстрый код.",
+        tag: "RUST",
+    },
+    {
+        id: "03",
+        title: "Architecture",
+        description:
+            "Архитектура процессоров, микроконтроллеров и систем на кристалле.",
+        tag: "ARCHITECTURE",
+    },
+    {
+        id: "04",
+        title: "Systems",
+        description:
+            "Linux, toolchains и всё, что происходит на уровне системы.",
+        tag: "SYSTEM_LAYER",
+    },
+    {
+        id: "05",
+        title: "Embedded",
+        description:
+            "Железо, прошивки и граница между кодом и физическим миром.",
+        tag: "HARDWARE_LINK",
+    },
+];
 ---
 
-<BaseLayout
-  title="About — LOSEV.LAB"
-  description="About Danil and LOSEV.LAB."
->
+<BaseLayout title="About — LOSEV.LAB" description="About Danil and LOSEV.LAB.">
+    <section class="about-hero">
+        <div class="container about-hero-grid">
+            <div class="about-hero-copy">
+                <div class="eyebrow">ABOUT / OPERATOR PROFILE</div>
+                <h1>
+                    Building.<br />Breaking.<br /><span>Understanding.</span>
+                </h1>
+                <p class="about-lead">
+                    LOSEV.LAB — это мой технический уголок в интернете.
+                </p>
+            </div>
 
-  <article class="article">
+            <aside class="about-terminal" aria-label="Profile status">
+                <div class="about-terminal-bar">
+                    <span>PROFILE.SYS</span><span aria-hidden="true">● ● ●</span
+                    >
+                </div>
+                <dl>
+                    <div><dt>STATUS</dt><dd>ONLINE</dd></div>
+                    <div><dt>MODE</dt><dd>LEARNING</dd></div>
+                    <div><dt>SIGNAL</dt><dd>OPEN</dd></div>
+                    <div><dt>UPTIME</dt><dd>BUILDING</dd></div>
+                </dl>
+                <p>
+                    <span>&gt;</span> curious by design<span
+                        class="about-cursor">_</span
+                    >
+                </p>
+            </aside>
+        </div>
+    </section>
 
-    <header class="article-header">
+    <section class="about-section">
+        <div class="container about-intro-grid">
+            <div class="about-section-label">01 / MANIFEST</div>
+            <div class="about-intro-copy">
+                <p>
+                    Добро пожаловать в систему нетранер. Исследуй, разбирай,
+                    ломай и собирай заново. Здесь нет готовых ответов, только
+                    процесс.
+                </p>
+            </div>
+        </div>
+    </section>
 
-      <div class="article-category">
-        ABOUT
-      </div>
+    <section class="about-section">
+        <div class="container about-intro-grid">
+            <div class="about-section-label">02 / ABOUT</div>
+            <div class="about-intro-copy">
+                <p>
+                    Я - Даня. Студент который любит изучать и разбираться в том
+                    как устроенна техника. В этом блоге я делюсь своими знаниями
+                    и опытом (хаха) в области IT.
+                </p>
+                <p class="about-muted-copy">
+                    Тут я пишу о том, что мне интересно и что я изучаю. Надеюсь,
+                    что мои статьи будут полезны и интересны другим людям.
+                </p>
+            </div>
+        </div>
+    </section>
 
-      <h1 class="article-title">
-        Building.<br />
-        Breaking.<br />
-        Understanding.
-      </h1>
+    <section class="about-section about-topics-section">
+        <div class="container">
+            <div class="section-header about-section-header">
+                <div>
+                    <div class="about-section-label">03 / TOPICS</div>
+                    <h2 class="about-section-title">
+                        Темы, которыми я делюсь в блоге.
+                    </h2>
+                </div>
+                <span class="about-section-count"
+                    >{topics.length.toString().padStart(2, "0")} CHANNELS</span
+                >
+            </div>
+            <div class="about-topics-grid">
+                {
+                    topics.map((topic) => (
+                        <article class="about-topic-card">
+                            <div class="about-topic-card-top">
+                                <>
+                                    <span>{topic.id}</span>
+                                    <span class="about-topic-tag">
+                                        {topic.tag}
+                                    </span>
+                                </>
+                            </div>
+                            <h3>{topic.title}</h3>
+                            <p>{topic.description}</p>
+                        </article>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
 
-    </header>
-
-    <div class="prose">
-
-      <p>
-        LOSEV.LAB — это мой технический
-        уголок в интернете.
-      </p>
-
-      <p>
-        Здесь я записываю знания,
-        эксперименты и исследования,
-        чтобы не терять их и одновременно
-        делиться ими с другими.
-      </p>
-
-      <h2>
-        Topics
-      </h2>
-
-
-    </div>
-
-  </article>
-
+    <!-- <section class="about-section about-closing-section">
+        <div class="container about-closing">
+            <div class="about-section-label">03 / TRANSMISSION</div>
+            <p>Разбираем сложное. Сохраняем полезное. Продолжаем собирать.</p>
+            <a href="/blog/" class="about-link">Explore the log <span aria-hidden="true">→</span></a>
+        </div>
+    </section> -->
 </BaseLayout>

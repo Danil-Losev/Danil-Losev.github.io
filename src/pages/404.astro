@@ -3,17 +3,33 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
 <BaseLayout title="404 — LOSEV.LAB" description="Page not found.">
-    <section class="hero">
-        <div class="container">
-            <div class="eyebrow">ERROR</div>
+    <section class="not-found">
+        <div class="container not-found-grid">
+            <div class="not-found-copy">
+                <div class="eyebrow">ERROR / LOST SIGNAL</div>
+                <p class="not-found-code" aria-hidden="true">404</p>
+                <h1>Маршрут<br /><span>растворился в неоне.</span></h1>
+                <p class="not-found-description">
+                    Эта часть сети не отвечает. Возможно, страница ушла в
+                    подполье мегасети или адрес был разобран на байты.
+                </p>
+                <a href="/" class="not-found-action">Return to base <span aria-hidden="true">→</span></a>
+            </div>
 
-            <h1>404</h1>
-
-            <p class="hero-description">Эта страница не существует.</p>
-
-            <p>
-                <a href="/" class="section-link"> ← Вернуться домой </a>
-            </p>
+            <aside class="not-found-panel" aria-label="Error information">
+                <div class="not-found-panel-header">
+                    <span>ROUTE_DIAGNOSTICS</span>
+                    <span>ERR_404</span>
+                </div>
+                <div class="not-found-radar" aria-hidden="true">
+                    <span></span><span></span><span></span><i></i>
+                </div>
+                <dl>
+                    <div><dt>CONNECTION</dt><dd>LOST</dd></div>
+                    <div><dt>LAST KNOWN NODE</dt><dd>UNKNOWN</dd></div>
+                </dl>
+                <p><span>&gt;</span> trace aborted<span class="not-found-cursor">_</span></p>
+            </aside>
         </div>
     </section>
 </BaseLayout>
