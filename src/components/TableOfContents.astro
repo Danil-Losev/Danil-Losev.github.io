@@ -1,0 +1,74 @@
+<details class="article-toc" data-article-toc hidden open aria-label="Article navigation">
+    <summary class="article-toc-header">
+        <span class="article-toc-kicker">ARTICLE_INDEX</span>
+        <span class="article-toc-status">LIVE</span>
+    </summary>
+    <nav class="article-toc-links" aria-label="On this page"></nav>
+</details>
+
+<script>
+    function setupTableOfContents() {
+        document.querySelectorAll<HTMLDetailsElement>("[data-article-toc]").forEach((toc) => {
+            if (toc.dataset.ready === "true") return;
+
+            const article = toc.closest(".article");
+            const content = article?.querySelector(".markdown-content");
+            const links = toc.querySelector<HTMLElement>(".article-toc-links");
+            const headings = [...(content?.querySelectorAll<HTMLElement>("h1, h2, h3") ?? [])];
+
+            if (!links || headings.length === 0) return;
+
+            toc.dataset.ready = "true";
+            toc.hidden = false;
+            toc.open = true;
+
+            const entries = headings.map((heading, index) => {
+                heading.id ||= `section-${index + 1}`;
+                heading.classList.add("article-anchor");
+
+                const link = document.createElement("a");
+                link.href = `#${heading.id}`;
+                link.textContent = heading.textContent?.trim() || `Section ${index + 1}`;
+                link.dataset.level = heading.tagName.slice(1);
+                links.appendChild(link);
+
+                return { heading, link };
+            });
+
+            const setActiveLink = (activeLink: HTMLAnchorElement) => {
+                entries.forEach(({ link }) => link.removeAttribute("aria-current"));
+                activeLink.setAttribute("aria-current", "location");
+            };
+
+            entries.forEach(({ heading, link }) => {
+                link.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    setActiveLink(link);
+                    history.replaceState(null, "", `#${heading.id}`);
+                    heading.scrollIntoView({ behavior: "smooth", block: "start" });
+                });
+            });
+
+            setActiveLink(entries[0].link);
+
+            const observer = new IntersectionObserver(
+                (observed) => {
+                    const visible = observed
+                        .filter((entry) => entry.isIntersecting)
+                        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+
+                    if (!visible) return;
+
+                    const entry = entries.find(({ heading }) => heading === visible.target);
+                    if (entry) setActiveLink(entry.link);
+                },
+                { rootMargin: "-18% 0px -70% 0px", threshold: 0 },
+            );
+
+            entries.forEach(({ heading }) => observer.observe(heading));
+        });
+    }
+
+    setupTableOfContents();
+    document.addEventListener("astro:page-load", setupTableOfContents);
+</script>
