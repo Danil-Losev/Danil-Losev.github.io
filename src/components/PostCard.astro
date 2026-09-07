@@ -54,9 +54,9 @@ const searchTags = tags.map((tag) => tag.toLowerCase()).join("|");
 
     {
       tags.length > 0 && (
-        <div class="project-tags">
+        <div class="post-tags" aria-label="Теги статьи">
           {tags.map((tag) => (
-            <span class="project-tag">{tag}</span>
+            <span class="post-tag">#{tag}</span>
           ))}
         </div>
       )

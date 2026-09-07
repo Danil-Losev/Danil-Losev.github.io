@@ -707,7 +707,8 @@ border: 1px solid var(--border);
   transition:
     border-color 0.15s ease,
         box-shadow 0.15s ease,
-        background 0.15s ease;
+        background 0.15s ease,
+        transform 0.15s ease;
 }
 
 .post-card:hover {
@@ -715,6 +716,7 @@ border-color: var(--accent);
     background: var(--surface-hover);
 
 box-shadow: 0 0 20px -10px var(--accent-glow);
+  transform: translateY(-2px);
 }
 
 .post-date {
@@ -755,6 +757,32 @@ letter-spacing: -0.01em;
   font-size: 14px;
 }
 
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.post-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 23px;
+  padding: 3px 8px;
+  border: 1px solid color-mix(in srgb, var(--accent) 32%, var(--border));
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  color: var(--accent);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.post-card:hover .post-tag {
+  border-color: color-mix(in srgb, var(--accent) 62%, var(--border));
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
 .post-arrow {
 color: var(--text-muted);
 
@@ -765,6 +793,68 @@ color: var(--text-muted);
 
 .post-card:hover .post-arrow {
     color: var(--accent);
+}
+
+/* The archive uses a stronger card treatment than the compact home feed. */
+.blog-index-page .posts {
+  gap: 16px;
+}
+
+.blog-index-page .post-card {
+  position: relative;
+  min-height: 154px;
+  padding: 27px 28px;
+  border-color: var(--border-hover);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 5%, transparent), transparent 34%),
+    var(--surface);
+}
+
+.blog-index-page .post-card::before,
+.blog-index-page .post-card::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
+.blog-index-page .post-card::before {
+  top: 8px;
+  left: 8px;
+  border-top: 1px solid var(--accent);
+  border-left: 1px solid var(--accent);
+}
+
+.blog-index-page .post-card::after {
+  right: 8px;
+  bottom: 8px;
+  border-right: 1px solid var(--accent-2);
+  border-bottom: 1px solid var(--accent-2);
+}
+
+.blog-index-page .post-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 14px 32px -22px var(--accent-glow);
+}
+
+.blog-index-page .post-card:hover::before,
+.blog-index-page .post-card:hover::after {
+  opacity: 1;
+}
+
+.blog-index-page .post-category {
+  color: var(--accent);
+}
+
+.blog-index-page .post-title {
+  font-size: 22px;
+}
+
+.blog-index-page .post-date {
+  padding-top: 2px;
 }
 
 /* =========================
@@ -1003,6 +1093,15 @@ font-family: var(--font-family);
     grid-template-columns: 1fr auto;
 
     gap: 8px;
+  }
+
+  .blog-index-page .post-card {
+    min-height: 0;
+    padding: 22px 20px;
+  }
+
+  .blog-index-page .post-title {
+    font-size: 20px;
   }
 
   .post-date {
