@@ -41,7 +41,7 @@ const { title, description, category, pubDate } = post.data;
             <div class="article-meta">
                 <time>
                     {
-                        pubDate.toLocaleDateString("ru-RU", {
+                        pubDate.toLocaleDateString("en-US", {
                             year: "numeric",
                             month: "long",
                             day: "numeric",
@@ -55,12 +55,13 @@ const { title, description, category, pubDate } = post.data;
             </div>
         </header>
 
+
         <div class="prose">
             <MarkdownContent Content={Content} />
         </div>
 
         <div class="project-back">
-            <a href="/blog/"> ← Все статьи </a>
+            <a href="/blog/"> Back to the archive </a>
         </div>
     </article>
 </BaseLayout>

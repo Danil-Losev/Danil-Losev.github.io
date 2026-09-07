@@ -195,10 +195,10 @@ font-size: 14px;
 position: relative;
   color: var(--text-secondary);
 
-font-size: 13px;
+  font-size: 13px;
   font-weight: 500;
 
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
 }
 
 .nav a::before {
@@ -206,6 +206,12 @@ font-size: 13px;
 }
 .nav a:hover {
 color: var(--accent);
+  text-shadow: 0 0 12px var(--accent-glow);
+}
+
+.nav a.is-active {
+    color: var(--accent);
+    text-shadow: 0 0 12px var(--accent-glow);
 }
 
 .header-actions {
@@ -348,6 +354,13 @@ html[data-nav-open="true"] .nav-drawer {
 
 .nav-drawer a:hover {
     color: var(--accent);
+}
+
+.nav-drawer a.is-active {
+    border-left: 2px solid var(--accent);
+    padding-left: 10px;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 6%, transparent);
 }
 
 @media (max-width: 800px) {

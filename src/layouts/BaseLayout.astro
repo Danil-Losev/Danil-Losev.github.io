@@ -10,6 +10,7 @@ const { title = "LOSEV.LAB", description = "Technical blog by Danil Losev" } =
     Astro.props;
 
 const currentUrl = Astro.url.href;
+const currentPath = Astro.url.pathname;
 ---
 
 <!doctype html>
@@ -47,10 +48,10 @@ const currentUrl = Astro.url.href;
                 </a>
 
                 <nav class="nav">
-                    <a href="/">HOME</a>
-                    <a href="/blog/">BLOG</a>
-                    <a href="/projects/">PROJECTS</a>
-                    <a href="/about/">ABOUT</a>
+                    <a href="/" class:list={{ "is-active": currentPath === "/" }} aria-current={currentPath === "/" ? "page" : undefined}>HOME</a>
+                    <a href="/blog/" class:list={{ "is-active": currentPath.startsWith("/blog") }} aria-current={currentPath.startsWith("/blog") ? "page" : undefined}>BLOG</a>
+                    <a href="/projects/" class:list={{ "is-active": currentPath.startsWith("/projects") }} aria-current={currentPath.startsWith("/projects") ? "page" : undefined}>PROJECTS</a>
+                    <a href="/about/" class:list={{ "is-active": currentPath === "/about/" }} aria-current={currentPath === "/about/" ? "page" : undefined}>ABOUT</a>
                     <a
                         href="https://github.com/Danil-Losev"
                         target="_blank"
@@ -91,7 +92,7 @@ const currentUrl = Astro.url.href;
 
         <nav class="nav-drawer" id="nav-drawer" aria-hidden="true">
             <div class="nav-drawer-header">
-                <span class="nav-drawer-title">Menu</span>
+                <span class="nav-drawer-title">Navigation</span>
 
                 <button
                     class="icon-button"
@@ -101,10 +102,10 @@ const currentUrl = Astro.url.href;
                     ×
                 </button>
             </div>
-            <a href="/">HOME</a>
-            <a href="/blog/">BLOG</a>
-            <a href="/projects/">PROJECTS</a>
-            <a href="/about/">ABOUT</a>
+            <a href="/" class:list={{ "is-active": currentPath === "/" }} aria-current={currentPath === "/" ? "page" : undefined}>HOME</a>
+            <a href="/blog/" class:list={{ "is-active": currentPath.startsWith("/blog") }} aria-current={currentPath.startsWith("/blog") ? "page" : undefined}>BLOG</a>
+            <a href="/projects/" class:list={{ "is-active": currentPath.startsWith("/projects") }} aria-current={currentPath.startsWith("/projects") ? "page" : undefined}>PROJECTS</a>
+            <a href="/about/" class:list={{ "is-active": currentPath === "/about/" }} aria-current={currentPath === "/about/" ? "page" : undefined}>ABOUT</a>
             <a
                 href="https://github.com/Danil-Losev"
                 target="_blank"
@@ -124,7 +125,7 @@ const currentUrl = Astro.url.href;
                     © {new Date().getFullYear()} LOSEV.LAB
                 </span>
 
-                <span> Built with Astro </span>
+                <span> SIGNAL VERIFIED / BUILT WITH ASTRO </span>
             </div>
         </footer>
 

@@ -1,170 +1,139 @@
 ---
-import {
-  getCollection,
-  render,
-} from 'astro:content';
+import { getCollection, render } from "astro:content";
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import ProjectIcon from '../../components/ProjectIcon.astro';
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ProjectIcon from "../../components/ProjectIcon.astro";
 import MarkdownContent from "../../components/MarkdownContent.astro";
 
 export async function getStaticPaths() {
-  const projects = await getCollection(
-    'projects',
-    ({ data }) => !data.draft
-  );
+    const projects = await getCollection("projects", ({ data }) => !data.draft);
 
-  return projects.map((project) => ({
-    params: {
-      slug: project.id,
-    },
+    return projects.map((project) => ({
+        params: {
+            slug: project.id,
+        },
 
-    props: {
-      project,
-    },
-  }));
+        props: {
+            project,
+        },
+    }));
 }
-
 
 const { project } = Astro.props;
 
 const { Content } = await render(project);
 
 const {
-  title,
-  description,
-  status,
-  category,
-  tags,
-  icon,
-  github,
-  demo,
-  website,
+    title,
+    description,
+    status,
+    category,
+    tags,
+    icon,
+    github,
+    demo,
+    website,
 } = project.data;
 
-
 const statusLabel = {
-  active: 'ACTIVE',
-  completed: 'COMPLETED',
-  archived: 'ARCHIVED',
+    active: "ACTIVE",
+    completed: "COMPLETED",
+    archived: "ARCHIVED",
 }[status];
 ---
 
+<BaseLayout title={`${title} — LOSEV.LAB`} description={description}>
+    <main class="project-page">
+        <div class="container">
 
-<BaseLayout
-  title={`${title} — LOSEV.LAB`}
-  description={description}
->
-  <main class="project-page">
+            <header class="project-header">
+                <div class="project-header-icon">
+                    <ProjectIcon
+                        type={icon.type}
+                        src={icon.src}
+                        alt={icon.alt}
+                        name={icon.name}
+                        size={64}
+                    />
+                </div>
 
-    <div class="container">
+                <div class="project-header-content">
+                    <div class="project-header-meta">
+                        <span class="project-category">
+                            {category}
+                        </span>
 
-      <header class="project-header">
+                        <span class={`project-status project-status-${status}`}>
+                            <span class="project-status-dot"></span>
 
-        <div class="project-header-icon">
-          <ProjectIcon
-            type={icon.type}
-            src={icon.src}
-            alt={icon.alt}
-            name={icon.name}
-            size={64}
-          />
-        </div>
+                            {statusLabel}
+                        </span>
+                    </div>
+
+                    <h1 class="project-header-title">
+                        {title}
+                    </h1>
+
+                    <p class="project-header-description">
+                        {description}
+                    </p>
+
+                    {
+                        tags.length > 0 && (
+                            <div class="project-tags">
+                                {tags.map((tag) => (
+                                    <span class="project-tag">{tag}</span>
+                                ))}
+                            </div>
+                        )
+                    }
+
+                    {
+                        (github || demo || website) && (
+                            <div class="project-header-links">
+                                {github && (
+                                    <a
+                                        href={github}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        GitHub ↗
+                                    </a>
+                                )}
+
+                                {demo && (
+                                    <a
+                                        href={demo}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        Demo ↗
+                                    </a>
+                                )}
+
+                                {website && (
+                                    <a
+                                        href={website}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        Website ↗
+                                    </a>
+                                )}
+                            </div>
+                        )
+                    }
+                </div>
+            </header>
 
 
-        <div class="project-header-content">
-
-          <div class="project-header-meta">
-
-            <span class="project-category">
-              {category}
-            </span>
-
-            <span
-              class={`project-status project-status-${status}`}
-            >
-              <span class="project-status-dot"></span>
-
-              {statusLabel}
-            </span>
-
-          </div>
-
-
-          <h1 class="project-header-title">
-            {title}
-          </h1>
-
-
-          <p class="project-header-description">
-            {description}
-          </p>
-
-
-          {tags.length > 0 && (
-            <div class="project-tags">
-              {tags.map((tag) => (
-                <span class="project-tag">
-                  {tag}
-                </span>
-              ))}
+            <div class="project-content prose">
+                <MarkdownContent Content={Content} />
             </div>
-          )}
 
-
-          {(github || demo || website) && (
-            <div class="project-header-links">
-
-              {github && (
-                <a
-                  href={github}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  GitHub ↗
-                </a>
-              )}
-
-              {demo && (
-                <a
-                  href={demo}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Demo ↗
-                </a>
-              )}
-
-              {website && (
-                <a
-                  href={website}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Website ↗
-                </a>
-              )}
-
+            <div class="project-back">
+                <a href="/projects/"> Back to projects </a>
             </div>
-          )}
-
         </div>
-
-      </header>
-
-
-      <div class="project-content prose">
-        <MarkdownContent Content={Content}  />
-      </div>
-
-
-      <div class="project-back">
-        <a href="/projects/">
-          ← Back to projects
-        </a>
-      </div>
-
-    </div>
-
-  </main>
+    </main>
 </BaseLayout>
