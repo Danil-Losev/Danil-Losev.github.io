@@ -2159,21 +2159,51 @@ background: rgba(0, 240, 255, 0.3);
    ========================= */
 
 .markdown-content .table-wrapper {
+  position: relative;
   width: 100%;
   margin: 1.5rem 0;
   overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-inline: contain;
+  scrollbar-color: var(--accent) var(--surface);
+  scrollbar-width: thin;
+  touch-action: pan-x pinch-zoom;
 
   border: 1px solid var(--border);
-border-radius: var(--radius);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.markdown-content .table-wrapper:focus-visible {
+  outline-offset: 3px;
+}
+
+.markdown-content .table-wrapper::-webkit-scrollbar {
+  height: 10px;
+}
+
+.markdown-content .table-wrapper::-webkit-scrollbar-track {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.markdown-content .table-wrapper::-webkit-scrollbar-thumb {
+  border: 3px solid var(--surface);
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.markdown-content .table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-2);
 }
 
 .markdown-content table {
   width: 100%;
-  min-width: 600px;
+  min-width: 680px;
+  margin: 0;
 
   border-collapse: collapse;
-
-font-size: 0.88rem;
+  font-size: 0.88rem;
 }
 
 .markdown-content th,
@@ -2197,11 +2227,11 @@ font-size: 0.88rem;
 }
 
 .markdown-content th {
-color: var(--accent);
+  color: var(--accent);
   font-weight: 600;
-
-letter-spacing: 0.02em;
-  background: var(--surface-hover);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--surface-hover) 88%, var(--accent) 12%);
 }
 
 .markdown-content td {
@@ -2227,23 +2257,31 @@ border-radius: var(--radius);
 color: var(--accent);
 }
 
-@media (max-width: 640px) {
-  .markdown-content .table-wrapper {
-    margin-left: -0.5rem;
-    margin-right: -0.5rem;
-
-    width: calc(100% + 1rem);
-
-    border-radius: var(--radius);
+@media (max-width: 1024px) {
+  .prose .markdown-content table {
+    display: table;
+    overflow: visible;
   }
 
+  .markdown-content .table-wrapper {
+    margin-inline: 0;
+  }
+}
+
+@media (max-width: 640px) {
   .markdown-content table {
-    min-width: 550px;
+    min-width: 600px;
   }
 
   .markdown-content th,
   .markdown-content td {
     padding: 0.65rem 0.75rem;
+  }
+
+  .markdown-content .table-wrapper {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+    width: calc(100% + 1rem);
   }
 }
 

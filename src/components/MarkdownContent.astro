@@ -108,6 +108,9 @@ const { Content } = Astro.props;
 
                 const wrapper = document.createElement("div");
                 wrapper.className = "table-wrapper";
+                wrapper.tabIndex = 0;
+                wrapper.setAttribute("role", "region");
+                wrapper.setAttribute("aria-label", "Таблица: прокрутите по горизонтали");
 
                 table.parentNode?.insertBefore(wrapper, table);
                 wrapper.appendChild(table);
